@@ -144,3 +144,28 @@ Contrastive Loss operates on *pairs* of inputs (e.g., an Image and its Text Capt
 **Answer:**
 Dropout randomly zeros out activations during training, shifting the variance of the layer's output. Batch Normalization tracks the moving average of the mean and variance during training to use during inference (when Dropout is turned off). 
 Because Dropout changes the variance during training, the moving statistics tracked by BatchNorm become completely misaligned with the actual statistics of the activations during inference. Place Dropout *after* BatchNorm.
+
+### Q26: What is the "Dying ReLU" problem mathematically, and why does LeakyReLU not always fix it?
+**Answer:**
+ReLU is $f(x) = \max(0, x)$. If a neuron's weights are updated such that $W^T x + b < 0$ for all inputs in the dataset, the neuron outputs 0 constantly. Its gradient is exactly 0, meaning it will never update again. It is permanently "dead". 
+LeakyReLU uses $f(x) = \max(\alpha x, x)$ where $\alpha = 0.01$, ensuring the gradient is never exactly 0. However, if the learning rate is too high, the weights can still be pushed so far into the negative region that the gradient (which is now $0.01 \times \text{loss\_gradient}$) is too infinitesimally small to ever pull the weights back to the positive side within a realistic number of training steps.
+
+### Q27: How does the `Temperature` parameter mathematically affect the Softmax output?
+**Answer:**
+The softmax with temperature is $p_i = \frac{\exp(z_i / T)}{\sum \exp(z_j / T)}$.
+- As $T \to \infty$, all $z_i / T$ approach 0. $\exp(0) = 1$. The output becomes a perfectly uniform distribution, regardless of the input logits.
+- As $T \to 0$, the largest logit dominates exponentially. It approaches the `argmax` function (a hard one-hot vector).
+- $T = 1$ is the standard Softmax.
+
+### Q28: What is Speculative Decoding in LLM inference, and why does it speed up generation without changing the output quality?
+**Answer:**
+Autoregressive decoding is bottlenecked by memory bandwidth, not compute. Generating 1 token takes almost the same time as evaluating 5 tokens in parallel.
+Speculative Decoding uses a tiny, fast "Draft Model" to quickly guess the next $K$ tokens. Then, the massive "Target Model" evaluates all $K$ guessed tokens *in a single parallel forward pass*. If the Target Model agrees with the Draft Model's guesses, it accepts them, generating $K$ tokens in the time it usually takes to generate 1. If it disagrees at position $j$, it rejects the rest and computes the correct token for $j$. The output is mathematically identical to running the Target Model normally, but much faster.
+
+### Q29: Why can the Adam optimizer fail to converge on simple convex problems? (The AMSGrad paper).
+**Answer:**
+Reddi et al. (2018) showed that Adam relies on an exponentially decaying average of past squared gradients ($v_t$). If the optimizer encounters a rare but highly informative batch with massive gradients, the learning step should theoretically be small (due to division by $\sqrt{v_t}$). But because $v_t$ *exponentially decays*, Adam quickly "forgets" this massive gradient in subsequent steps. If that rare batch is the only thing preventing the model from falling into a bad local minimum, Adam will fail. AMSGrad fixes this by forcing $v_t$ to strictly be the *maximum* of all past squared gradients, ensuring it never forgets.
+
+### Q30: What is the "Curse of Dimensionality" in the context of LLM Embeddings (e.g., why 1024 dims and not 1,000,000 dims)?
+**Answer:**
+Beyond the obvious memory and compute constraints, extremely high-dimensional spaces suffer from distance concentration. In a 1,000,000-dimensional space, the ratio of the distance to the nearest neighbor versus the distance to the farthest neighbor approaches 1. Every vector becomes almost exactly orthogonal (cosine similarity near 0) to every other vector. The mathematical concept of "similarity" breaks down, making the embeddings useless for semantic search or attention mechanisms.

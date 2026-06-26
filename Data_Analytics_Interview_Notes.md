@@ -119,6 +119,33 @@ If randomized controlled trials (A/B tests) are impossible or unethical, Data Sc
 
 ---
 
+### Q21: What is the Will Rogers Phenomenon (Stage Migration) in Data Analytics?
+**Answer:**
+Named after a comedian who joked "When the Okies left Oklahoma and moved to California, they raised the average intelligence level in both states."
+In analytics, moving a data point from one group to another can raise the average of *both* groups, even if no individual value changed. For example, if you move the best-performing "Low-Tier" user into the "High-Tier" group (where they are now the worst-performing user), the average performance of the "Low-Tier" group drops (wait, if you move the best, it drops... ah, no. If you move the *worst* High-Tier user to the Low-Tier group, they are still better than the Low-Tier average. So the High-Tier average goes up, AND the Low-Tier average goes up!). This completely destroys cohort-over-time analysis if the thresholds defining the cohorts change.
+
+### Q22: How can Benford's Law be used for Fraud Detection in financial data?
+**Answer:**
+Benford's Law states that in many naturally occurring datasets (like transaction amounts, tax returns, or population counts), the leading digit is not uniformly distributed. The number 1 appears as the leading digit about 30% of the time, 2 appears 17%, and 9 appears less than 5% of the time. 
+If a human fraudster tries to make up fake transaction amounts, they will usually pick random numbers, leading to a uniform distribution of leading digits (roughly 11% for each). By plotting the leading digits of a user's transactions against Benford's curve, you can instantly flag anomalies without any complex Machine Learning.
+
+### Q23: In SQL Window Functions, what happens if you forget to specify the `ORDER BY` clause inside the `OVER()` function when calculating a running total?
+**Answer:**
+Without an `ORDER BY` clause, the default window frame is the entire partition (`ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING`). 
+Instead of calculating a *running total* row by row, the function will simply calculate the *grand total* of the entire partition and assign that exact same grand total to every single row. To get a running total, you must specify `ORDER BY` so the default frame becomes `ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`.
+
+### Q24: What is Goodhart's Law, and how does it ruin Data Science projects?
+**Answer:**
+"When a measure becomes a target, it ceases to be a good measure."
+If an ML model optimizes purely for "Click-Through Rate" (CTR), the model will learn to surface Clickbait. If you optimize for "Time Spent on App", the model will surface outrage-inducing content. Users adapt their behavior to game the metric, and the metric loses its correlation with the actual business goal (e.g., long-term user satisfaction and revenue).
+
+### Q25: Why is Pandas entirely single-threaded, and how do you parallelize it?
+**Answer:**
+Pandas is built on top of NumPy, which relies heavily on the Python C-API. Python is constrained by the **Global Interpreter Lock (GIL)**, which prevents multiple native threads from executing Python bytecodes at once to avoid memory corruption. Therefore, Pandas operations run on a single CPU core.
+To parallelize, you cannot use simple Python threads. You must use multi-processing (which copies the entire DataFrame into memory for each process, causing massive RAM spikes) or use distributed computing libraries designed to bypass the GIL, such as **Dask** or **Polars** (which is written in Rust and natively multithreaded).
+
+---
+
 ## 6. Bonus: How to Ace an Automated AI Interview (HireVue, etc.) / Πώς να περάσεις μια Αυτοματοποιημένη AI Συνέντευξη
 
 ### 🇬🇧 English Version
