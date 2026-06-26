@@ -119,31 +119,65 @@ If randomized controlled trials (A/B tests) are impossible or unethical, Data Sc
 
 ---
 
-## 6. Bonus: Πώς να περάσεις μια Αυτοματοποιημένη AI Συνέντευξη (HireVue, κλπ.)
+## 6. Bonus: How to Ace an Automated AI Interview (HireVue, etc.) / Πώς να περάσεις μια Αυτοματοποιημένη AI Συνέντευξη
+
+### 🇬🇧 English Version
+
+Most modern platforms (like HireVue, TalentCube, or Byteboard) structure the process in three main levels:
+
+#### 1. Asynchronous Video (On-Demand Video)
+This is the first filter. You are given questions on the screen and a specific amount of time (e.g., 30 seconds to prep, 2 minutes to answer) to speak into the camera.
+- **What the AI looks for:** It doesn't just analyze keywords. It uses Natural Language Processing (NLP) to evaluate your thought structure, clarity, and even your vocal tone (whether you show confidence or hesitation).
+- **Typical question:** *"Describe a time when data led you to a conclusion that contradicted management's intuition. How did you handle it?"*
+
+#### 2. Automated Technical Assessment (Real-Time Sandbox)
+Here, the AI acts as a code and statistics "examiner". You are given a sandbox environment and a dataset.
+- **SQL & Python/R:** You are asked to write queries for data extraction or scripts for data cleaning and aggregation. The AI automatically grades not only the correctness of the output, but also code efficiency (Big O notation) and adherence to best practices (e.g., proper joins, avoiding unnecessary subqueries).
+- **Statistics & Machine Learning:** You might be asked to interpret model metrics (e.g., ROC-AUC, Precision/Recall) or explain why a sample is biased.
+
+#### 3. Case Study Presentation (Data Storytelling)
+In advanced stages, the AI might give you a business problem (e.g., "Reduce churn rate in a subscription service"). You must analyze the data and document your proposals.
+- **What the AI evaluates:** Business acumen—whether you can translate lines of code into financial value for the company.
+
+#### How Does the AI Evaluate the Candidate?
+The system has no "personal preferences." It operates based on models trained on the profiles of the company's already successful Data Analysts.
+- **Vocabulary & Terminology:** It hunts for specific terms (e.g., data distribution, p-value, ETL pipelines, imputation, A/B testing).
+- **Response Structure:** For behavioral questions, the AI is programmed to recognize the STAR method (Situation, Task, Action, Result). If you answer chaotically, your score drops.
+- **Soft Skills:** Sentiment analysis from video keyframes checks if you maintain eye contact with the camera (translated as focus) and if your speech has a steady rhythm.
+
+#### How to "Beat" the AI Model
+Since the interview is orchestrated by an algorithm, you must adapt your tactics accordingly:
+- **Speak like a Data Scientist/Analyst:** Do not be generic. Instead of saying *"I cleaned the data"*, say *"I handled missing values using median imputation because the distribution had heavy skewness"*. The AI loves precise terminology.
+- **Look at the camera, not the lens:** When answering video questions, eye contact with the lens is what the AI translates as "communicating with the interviewer."
+- **Professional Structure:** Keep your answers strictly structured. Start with the problem, state exactly what tools you used (e.g., Pandas, Tableau), and close with a quantitative result (e.g., *"this improved accuracy by 12%"*).
+
+---
+
+### 🇬🇷 Ελληνική Έκδοση
 
 Οι περισσότερες σύγχρονες πλατφόρμες (όπως το HireVue, το TalentCube ή το Byteboard) στήνουν τη διαδικασία σε τρία βασικά επίπεδα:
 
-### 1. Η Ασύγχρονη Βιντεοσκόπηση (On-Demand Video)
+#### 1. Η Ασύγχρονη Βιντεοσκόπηση (On-Demand Video)
 Αυτό είναι το πρώτο φίλτρο. Σου δίνονται κάποιες ερωτήσεις στην οθόνη και έχεις συγκεκριμένο χρόνο (π.χ. 30 δευτερόλεπτα προετοιμασίας και 2 λεπτά απάντησης) για να μιλήσεις στην κάμερα.
 - **Τι κοιτάζει το AI:** Δεν αναλύει μόνο τις λέξεις-κλειδιά. Χρησιμοποιεί Natural Language Processing (NLP) για να αξιολογήσει τη δομή της σκέψης σου, τη σαφήνεια, αλλά και τον τόνο της φωνής σου (αν δείχνεις σιγουριά ή δισταγμό).
 - **Τυπική ερώτηση:** *"Περιγράψτε μια περίπτωση όπου τα δεδομένα σας οδήγησαν σε ένα συμπέρασμα που ερχόταν σε αντίθεση με τη διαίσθηση του management. Πώς το διαχειριστήκατε;"*
 
-### 2. Η Τεχνική Δοκιμασία σε Πραγματικό Χρόνο (Automated Technical Assessment)
+#### 2. Η Τεχνική Δοκιμασία σε Πραγματικό Χρόνο (Automated Technical Assessment)
 Εδώ το AI λειτουργεί ως "εξεταστής" κώδικα και στατιστικής. Σου δίνεται ένα περιβάλλον (sandbox) και ένα dataset.
 - **SQL & Python/R:** Σου ζητείται να γράψεις queries για data extraction ή scripts για data cleaning και aggregation. Το AI βαθμολογεί αυτόματα όχι μόνο αν το αποτέλεσμα είναι σωστό, αλλά και την αποδοτικότητα του κώδικα (code efficiency, Big O notation) ή αν ακολουθείς καλές πρακτικές (π.χ. σωστά joins, αποφυγή subqueries εκεί που δεν χρειάζεται).
 - **Στατιστική & Machine Learning:** Μπορεί να σου ζητηθεί να ερμηνεύσεις τα metrics ενός μοντέλου (π.χ. ROC-AUC, Precision/Recall) ή να εξηγήσεις γιατί υπάρχει bias σε ένα δείγμα.
 
-### 3. Παρουσίαση Case Study (Data Storytelling)
+#### 3. Παρουσίαση Case Study (Data Storytelling)
 Σε πιο προχωρημένα στάδια, το AI μπορεί να σου δώσει ένα business πρόβλημα (π.χ. "Μείωση του churn rate σε μια συνδρομητική υπηρεσία"). Πρέπει να αναλύσεις τα δεδομένα και να καταγράψεις τις προτάσεις σου.
 - **Τι αξιολογεί το AI:** Το business acumen (την επιχειρηματική σου αντίληψη) — δηλαδή αν μπορείς να μεταφράσεις τις γραμμές του κώδικα σε οικονομικό όφελος για την εταιρεία.
 
-### Πώς Αξιολογεί το AI τον Υποψήφιο;
+#### Πώς Αξιολογεί το AI τον Υποψήφιο;
 Το σύστημα δεν έχει "προσωπικές προτιμήσεις". Λειτουργεί με βάση μοντέλα που έχουν εκπαιδευτεί πάνω στα προφίλ των ήδη επιτυχημένων Data Analysts της εταιρείας.
 - **Λεξιλόγιο & Ορολογία:** Ψάχνει για συγκεκριμένους όρους (π.χ. data distribution, p-value, ETL pipelines, imputation, A/B testing).
 - **Δομή Απάντησης:** Στις συμπεριφορικές ερωτήσεις (behavioral), το AI είναι προγραμματισμένο να αναγνωρίζει τη μέθοδο STAR (Situation, Task, Action, Result). Αν απαντάς χαοτικά, το σκορ πέφτει.
 - **Soft Skills:** Ανίχνευση συναισθήματος (sentiment analysis) από τα Keyframes του βίντεο για το αν διατηρείς eye contact με την κάμερα (που μεταφράζεται ως focus) και αν ο λόγος σου έχει σταθερό ρυθμό.
 
-### Πώς να "Κερδίσεις" το AI Μοντέλο
+#### Πώς να "Κερδίσεις" το AI Μοντέλο
 Αφού η συνέντευξη στήνεται από έναν αλγόριθμο, πρέπει να προσαρμόσεις την τακτική σου ανάλογα:
 - **Μίλα σαν Data Scientist/Analyst:** Μην είσαι γενικός. Αντί να πεις *"Καθάρισα τα δεδομένα"*, πες *"Διαχειρίστηκα τις ελλιπείς τιμές (missing values) με τη μέθοδο του median imputation γιατί η κατανομή είχε μεγάλο skewness"*. Το AI λατρεύει την ακριβή ορολογία.
 - **Κοίτα την κάμερα, όχι την οθόνη:** Όταν απαντάς στις βίντεο-ερωτήσεις, το eye contact με τον φακό είναι αυτό που το AI μεταφράζει ως "επικοινωνία με τον συνομιλητή".
