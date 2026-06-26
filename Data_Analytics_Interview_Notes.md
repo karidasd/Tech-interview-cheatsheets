@@ -7,31 +7,48 @@
 
 ## 1. Statistical Paradoxes & A/B Testing
 
-### Q1: Your A/B test shows that Variant B has a higher conversion rate for Mobile users AND a higher conversion rate for Desktop users. However, when you look at the total combined users, Variant A has a higher conversion rate. How is this mathematically possible?
+<details>
+<summary><b>Q1: Your A/B test shows that Variant B has a higher conversion rate for Mobile users AND a higher conversion rate for Desktop users. However, when you look at the total combined users, Variant A has a higher conversion rate. How is this mathematically possible?</b></summary>
+<br>
 **Answer:**
 This is a classic example of **Simpson's Paradox**. It occurs when the groups (Mobile vs. Desktop) have drastically different sample sizes and different baseline conversion rates. For example, Variant A might have been exposed mostly to Desktop users (who naturally have a 20% conversion rate), while Variant B was exposed mostly to Mobile users (who naturally have a 2% conversion rate). Even if Variant B slightly improved the Mobile rate to 3%, the massive volume of low-converting Mobile users pulls the overall average of Variant B down below Variant A.
+</details>
 
-### Q2: You are running an A/B test. On Day 3, you check the dashboard and the p-value is 0.02 (Statistically Significant). You immediately stop the test and deploy the winning variant. Why is this a massive analytical error?
+<details>
+<summary><b>Q2: You are running an A/B test. On Day 3, you check the dashboard and the p-value is 0.02 (Statistically Significant). You immediately stop the test and deploy the winning variant. Why is this a massive analytical error?</b></summary>
+<br>
 **Answer:**
 This is known as the **"Peeking Problem"** or Continuous Monitoring Trap. If you calculate the p-value continuously and stop the experiment the first time it dips below 0.05, you vastly inflate your False Positive Rate (Type I Error). Because A/B test metrics fluctuate wildly in the early days due to small sample sizes, almost *every* A/A test (where both variants are identical) will temporarily show statistical significance at some point. You must pre-determine the required sample size and *only* read the p-value once that sample size is reached.
+</details>
 
-### Q3: You are testing 20 different button colors at the same time against a control. One of them (Neon Pink) shows a statistically significant lift with p = 0.04. Should you deploy it?
+<details>
+<summary><b>Q3: You are testing 20 different button colors at the same time against a control. One of them (Neon Pink) shows a statistically significant lift with p = 0.04. Should you deploy it?</b></summary>
+<br>
 **Answer:**
 No. This is the **Multiple Comparisons Problem**. If you test 20 different random colors with an $\alpha$ of 0.05, the probability of getting at least one False Positive purely by random chance is $1 - (1 - 0.05)^{20} \approx 64\%$. To fix this, you must apply the **Bonferroni Correction** (divide your target $\alpha$ by the number of tests, so you need $p < 0.0025$) or control the False Discovery Rate using the Benjamini-Hochberg procedure.
+</details>
 
-### Q4: We launched a new feature. In the first week, engagement spiked by 40%. By week four, engagement dropped exactly back to where it was before the launch. Was the feature a failure?
+<details>
+<summary><b>Q4: We launched a new feature. In the first week, engagement spiked by 40%. By week four, engagement dropped exactly back to where it was before the launch. Was the feature a failure?</b></summary>
+<br>
 **Answer:**
 This is the **Novelty Effect**. Users are naturally curious about new buttons or UI changes, leading to a temporary spike in interactions. Once the novelty wears off, their behavior returns to baseline. This is why you must run A/B tests long enough to capture the "steady-state" behavior, bypassing the novelty period.
+</details>
 
-### Q5: When would you use a Multi-Armed Bandit (MAB) algorithm instead of a standard A/B test?
+<details>
+<summary><b>Q5: When would you use a Multi-Armed Bandit (MAB) algorithm instead of a standard A/B test?</b></summary>
+<br>
 **Answer:**
 A/B testing is for *learning* (finding the statistical truth), while MAB is for *earning* (maximizing reward during the test). You use MAB when the opportunity cost of exploring bad variants is too high, or when the optimal variant changes dynamically over time (e.g., news article headlines, holiday promotions). MAB continuously shifts traffic to the winning variant *while* the test is still running.
+</details>
 
 ---
 
 ## 2. Advanced SQL & "Silent Killers"
 
-### Q6: You write the following query to find all users who do not live in London:
+<details>
+<summary><b>Q6: You write the following query to find all users who do not live in London:</b></summary>
+<br>
 ```sql
 SELECT * FROM users WHERE city != 'London'
 ```
@@ -39,110 +56,168 @@ SELECT * FROM users WHERE city != 'London'
 **Answer:**
 In SQL, `NULL` represents an unknown value. Any comparison against `NULL` (including `!=` or `=`) yields `UNKNOWN` (essentially `FALSE` for `WHERE` clauses). If a user's city is `NULL`, `NULL != 'London'` evaluates to `UNKNOWN`, and the row is silently excluded. 
 *Fix:* `WHERE city != 'London' OR city IS NULL`.
+</details>
 
-### Q7: Explain how a `CROSS JOIN` combined with an aggregation can cause a "Fan-Out" explosion that crashes the data warehouse.
+<details>
+<summary><b>Q7: Explain how a `CROSS JOIN` combined with an aggregation can cause a "Fan-Out" explosion that crashes the data warehouse.</b></summary>
+<br>
 **Answer:**
 If you have a `users` table with 1M rows and a `transactions` table with 5M rows, and you accidentally forget the `ON` condition in your `JOIN`, it defaults to a Cartesian Product. The database attempts to create a temporary table with $1M \times 5M = 5$ Trillion rows. If you attempt to run a `SUM()` over this, it will exhaust the cluster's memory and crash the query.
+</details>
 
-### Q8: What is the difference between `RANK()`, `DENSE_RANK()`, and `ROW_NUMBER()`?
+<details>
+<summary><b>Q8: What is the difference between `RANK()`, `DENSE_RANK()`, and `ROW_NUMBER()`?</b></summary>
+<br>
 **Answer:**
 If you have scores: [100, 100, 90, 80]:
 - `ROW_NUMBER()` assigns strict sequential IDs: `1, 2, 3, 4`. (No ties allowed).
 - `RANK()` assigns ties the same rank, but skips the next numbers: `1, 1, 3, 4`.
 - `DENSE_RANK()` assigns ties the same rank, and does *not* skip numbers: `1, 1, 2, 3`.
+</details>
 
-### Q9: How do you query a hierarchical employee table (where each employee has a `manager_id`) to find the full management chain from the CEO down to the interns?
+<details>
+<summary><b>Q9: How do you query a hierarchical employee table (where each employee has a `manager_id`) to find the full management chain from the CEO down to the interns?</b></summary>
+<br>
 **Answer:**
 You must use a **Recursive CTE (Common Table Expression)**. You start with the base case (the CEO, where `manager_id IS NULL`), and then `UNION ALL` it with a recursive `SELECT` that joins the employee table back onto the CTE itself, traversing down the tree level by level.
+</details>
 
 ---
 
 ## 3. Product Analytics & Metric Design
 
-### Q10: What is Metric Cannibalization?
+<details>
+<summary><b>Q10: What is Metric Cannibalization?</b></summary>
+<br>
 **Answer:**
 When a change improves your primary KPI but actively destroys another critical business metric. For example, moving the "Checkout" button to cover the entire screen might increase Checkout Rate by 50%, but it cannibalizes "Add to Cart" and "Browse" events, ultimately destroying long-term retention and revenue. This is why every A/B test must track **Guardrail Metrics**.
+</details>
 
-### Q11: Explain Survivorship Bias in the context of Churn Analysis.
+<details>
+<summary><b>Q11: Explain Survivorship Bias in the context of Churn Analysis.</b></summary>
+<br>
 **Answer:**
 If you analyze the behavior of your "Current Active Users" to figure out what makes a successful user, you are ignoring all the users who churned. The active users "survived" the onboarding process. If you notice all active users use Feature X, it doesn't mean Feature X causes retention; it might just be that only dedicated users bother to find Feature X. You must compare cohorts of *all* users from their start date.
+</details>
 
-### Q12: Why is the Arithmetic Mean wrong for calculating average speed over equal distances, and what should you use?
+<details>
+<summary><b>Q12: Why is the Arithmetic Mean wrong for calculating average speed over equal distances, and what should you use?</b></summary>
+<br>
 **Answer:**
 If you drive 10 miles at 50mph, and 10 miles back at 10mph, your arithmetic average is 30mph. But this is wrong! The first leg took 12 mins, the second took 60 mins. Total time = 72 mins for 20 miles. Your true average speed is 16.6 mph. 
 Whenever you are averaging *rates* (like speed, or Click-Through-Rates over equal denominators), you must use the **Harmonic Mean**: $\frac{n}{\sum (1/x_i)}$.
+</details>
 
 ---
 
 ## 4. Python, Pandas & Machine Learning Traps
 
-### Q13: Why does Pandas throw a `SettingWithCopyWarning` when you do `df[df['age'] > 30]['salary'] = 50000`?
+<details>
+<summary><b>Q13: Why does Pandas throw a `SettingWithCopyWarning` when you do `df[df['age'] > 30]['salary'] = 50000`?</b></summary>
+<br>
 **Answer:**
 Pandas is warning you that it doesn't know if `df[df['age'] > 30]` returned a *View* (a reference to the original memory) or a *Copy* (a new slice in memory). By chaining brackets `[][]`, you modify a temporary DataFrame that gets instantly garbage collected, meaning the original `df` is completely unmodified!
 *Fix:* Always use `.loc` for assignment: `df.loc[df['age'] > 30, 'salary'] = 50000`.
+</details>
 
-### Q14: You have a DataFrame with 100 million rows. One column is `country` (containing only 10 unique strings). Loading this takes 5GB of RAM. How do you drop the RAM usage by 90%?
+<details>
+<summary><b>Q14: You have a DataFrame with 100 million rows. One column is `country` (containing only 10 unique strings). Loading this takes 5GB of RAM. How do you drop the RAM usage by 90%?</b></summary>
+<br>
 **Answer:**
 Convert the column `dtype` from `object` (string) to `category`. Pandas will store the 100 million string pointers as a compact integer array (0 to 9) and use a single lookup dictionary of 10 strings, massively saving memory.
+</details>
 
-### Q15: What is Anscombe's Quartet, and why does it mandate Data Visualization?
+<details>
+<summary><b>Q15: What is Anscombe's Quartet, and why does it mandate Data Visualization?</b></summary>
+<br>
 **Answer:**
 Anscombe's Quartet is a set of four datasets that have nearly identical descriptive statistics: the exact same Mean, Variance, Correlation Coefficient, and Linear Regression Line. However, when graphed, they look entirely different (one normal, one curved, one with a massive outlier). It proves that relying solely on aggregate metrics without plotting the data is dangerous.
+</details>
 
-### Q16: Why is SMOTE (Synthetic Minority Over-sampling Technique) dangerous if applied *before* Cross-Validation?
+<details>
+<summary><b>Q16: Why is SMOTE (Synthetic Minority Over-sampling Technique) dangerous if applied *before* Cross-Validation?</b></summary>
+<br>
 **Answer:**
 If you apply SMOTE to your entire dataset to balance classes, and *then* split into K-folds, the synthetic data points (which are interpolations of the original data) will end up in both your Train and Validation folds. This causes massive **Data Leakage**. Your model is evaluating itself on synthetic data that is nearly identical to its training data, resulting in 99% accuracy during CV, but terrible performance in production. Always apply SMOTE *inside* the CV loop, only on the training folds.
+</details>
 
-### Q17: What is the Curse of Dimensionality in the context of K-Means Clustering?
+<details>
+<summary><b>Q17: What is the Curse of Dimensionality in the context of K-Means Clustering?</b></summary>
+<br>
 **Answer:**
 In extremely high-dimensional spaces (e.g., 1000+ features), the mathematical concept of "distance" breaks down. The distance between the "nearest" neighbor and the "farthest" neighbor approaches a ratio of 1. Because K-Means relies entirely on Euclidean distance to form clusters, all points appear to be equidistant from all centroids, causing the clustering to become completely random and meaningless. Dimensionality reduction (PCA) is mandatory first.
+</details>
 
-### Q18: In Time Series Forecasting, why do we need the data to be "Stationary"?
+<details>
+<summary><b>Q18: In Time Series Forecasting, why do we need the data to be "Stationary"?</b></summary>
+<br>
 **Answer:**
 A stationary time series has a constant mean and variance over time (no trends or seasonality). Statistical models like ARIMA fundamentally assume that past patterns will repeat in the future. If the data has a trend (non-stationary), the baseline is shifting, so past coefficients are mathematically useless for future prediction. We make it stationary via Differencing ($y_t - y_{t-1}$) before modeling.
+</details>
 
 ---
 
 ## 5. Causal Inference & Advanced Modeling
 
-### Q19: Correlation does not imply causation. How can you prove causation mathematically without running an A/B test?
+<details>
+<summary><b>Q19: Correlation does not imply causation. How can you prove causation mathematically without running an A/B test?</b></summary>
+<br>
 **Answer:**
 If randomized controlled trials (A/B tests) are impossible or unethical, Data Scientists use **Quasi-Experimental Methods** for Causal Inference:
 - **Difference-in-Differences (RDD):** Exploits a strict cutoff (e.g., users above age 65 get a feature). You measure the discontinuity exactly at the cutoff line.
 - **Instrumental Variables:** Finds a third variable (instrument) that is correlated with the treatment but has no direct effect on the outcome.
 - **Propensity Score Matching:** Matches treated users with identical untreated users based on the probability of them receiving treatment.
+</details>
 
-### Q20: What is the difference between a Random Forest and Gradient Boosting (XGBoost) at a fundamental mathematical level?
+<details>
+<summary><b>Q20: What is the difference between a Random Forest and Gradient Boosting (XGBoost) at a fundamental mathematical level?</b></summary>
+<br>
 **Answer:**
 - **Random Forest** builds hundreds of deep trees completely *independently* (in parallel). Each tree is trained on a random subset of data and features. The final output is an average. It reduces **Variance** (overfitting).
 - **Gradient Boosting** builds very shallow trees *sequentially*. Each new tree is specifically trained to predict the **residuals (errors)** of the previous trees. It acts as functional gradient descent. It reduces **Bias** (underfitting) but is highly prone to overfitting if not regularized.
+</details>
 
 ---
 
-### Q21: What is the Will Rogers Phenomenon (Stage Migration) in Data Analytics?
+<details>
+<summary><b>Q21: What is the Will Rogers Phenomenon (Stage Migration) in Data Analytics?</b></summary>
+<br>
 **Answer:**
 Named after a comedian who joked "When the Okies left Oklahoma and moved to California, they raised the average intelligence level in both states."
 In analytics, moving a data point from one group to another can raise the average of *both* groups, even if no individual value changed. For example, if you move the best-performing "Low-Tier" user into the "High-Tier" group (where they are now the worst-performing user), the average performance of the "Low-Tier" group drops (wait, if you move the best, it drops... ah, no. If you move the *worst* High-Tier user to the Low-Tier group, they are still better than the Low-Tier average. So the High-Tier average goes up, AND the Low-Tier average goes up!). This completely destroys cohort-over-time analysis if the thresholds defining the cohorts change.
+</details>
 
-### Q22: How can Benford's Law be used for Fraud Detection in financial data?
+<details>
+<summary><b>Q22: How can Benford's Law be used for Fraud Detection in financial data?</b></summary>
+<br>
 **Answer:**
 Benford's Law states that in many naturally occurring datasets (like transaction amounts, tax returns, or population counts), the leading digit is not uniformly distributed. The number 1 appears as the leading digit about 30% of the time, 2 appears 17%, and 9 appears less than 5% of the time. 
 If a human fraudster tries to make up fake transaction amounts, they will usually pick random numbers, leading to a uniform distribution of leading digits (roughly 11% for each). By plotting the leading digits of a user's transactions against Benford's curve, you can instantly flag anomalies without any complex Machine Learning.
+</details>
 
-### Q23: In SQL Window Functions, what happens if you forget to specify the `ORDER BY` clause inside the `OVER()` function when calculating a running total?
+<details>
+<summary><b>Q23: In SQL Window Functions, what happens if you forget to specify the `ORDER BY` clause inside the `OVER()` function when calculating a running total?</b></summary>
+<br>
 **Answer:**
 Without an `ORDER BY` clause, the default window frame is the entire partition (`ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING`). 
 Instead of calculating a *running total* row by row, the function will simply calculate the *grand total* of the entire partition and assign that exact same grand total to every single row. To get a running total, you must specify `ORDER BY` so the default frame becomes `ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`.
+</details>
 
-### Q24: What is Goodhart's Law, and how does it ruin Data Science projects?
+<details>
+<summary><b>Q24: What is Goodhart's Law, and how does it ruin Data Science projects?</b></summary>
+<br>
 **Answer:**
 "When a measure becomes a target, it ceases to be a good measure."
 If an ML model optimizes purely for "Click-Through Rate" (CTR), the model will learn to surface Clickbait. If you optimize for "Time Spent on App", the model will surface outrage-inducing content. Users adapt their behavior to game the metric, and the metric loses its correlation with the actual business goal (e.g., long-term user satisfaction and revenue).
+</details>
 
-### Q25: Why is Pandas entirely single-threaded, and how do you parallelize it?
+<details>
+<summary><b>Q25: Why is Pandas entirely single-threaded, and how do you parallelize it?</b></summary>
+<br>
 **Answer:**
 Pandas is built on top of NumPy, which relies heavily on the Python C-API. Python is constrained by the **Global Interpreter Lock (GIL)**, which prevents multiple native threads from executing Python bytecodes at once to avoid memory corruption. Therefore, Pandas operations run on a single CPU core.
 To parallelize, you cannot use simple Python threads. You must use multi-processing (which copies the entire DataFrame into memory for each process, causing massive RAM spikes) or use distributed computing libraries designed to bypass the GIL, such as **Dask** or **Polars** (which is written in Rust and natively multithreaded).
+</details>
 
 ---
 
